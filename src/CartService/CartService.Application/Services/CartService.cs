@@ -35,4 +35,9 @@ public class CartService : ICartService
     {
         return _repo.DeleteItem(key, itemId);
     }
+
+    public void UpdateCartItemsByProductId(int productId, string newName, decimal newPrice)
+    {
+        _repo.UpdateCartItemsByProductId(productId, newName, newPrice);
+    }
 }

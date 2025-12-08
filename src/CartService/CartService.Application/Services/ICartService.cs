@@ -8,4 +8,5 @@ public interface ICartService
     IEnumerable<CartItemDto>? GetCartItems(string key);
     void AddItem(string key, AddCartItemDto item);
     bool DeleteItem(string key, int itemId);
+    void UpdateCartItemsByProductId(int productId, string newName, decimal newPrice);
 }

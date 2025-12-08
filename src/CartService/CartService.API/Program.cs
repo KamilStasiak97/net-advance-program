@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using CartService.API.Swagger;
 using CartService.Infrastructure;
 using CartService.Application.Services;
+using MassTransit;
+using CartService.API.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +28,37 @@ builder.Services.AddVersionedApiExplorer(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
-// Swagger
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-// DI: register infrastructure and application
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<ProductUpdatedConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        // Exponential retry policy: 3 retries with exponential backoff
+        cfg.UseMessageRetry(r => r.Exponential(3, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(2)));
+
+        // Configure consumer endpoint with durability for guaranteed delivery
+        cfg.ReceiveEndpoint("product-updated-queue", e =>
+        {
+            // Durable queue - survives broker restart
+            e.Durable = true;
+            e.AutoDelete = false;
+
+            // Configure consumer
+            e.ConfigureConsumer<ProductUpdatedConsumer>(context);
+        });
+    });
+});
+
 builder.Services.AddCartInfrastructure();
 builder.Services.AddScoped<CartService.Application.Services.ICartService, CartService.Application.Services.CartService>();
 

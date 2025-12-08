@@ -1,4 +1,4 @@
-namespace SenderService.API.Messages;
+namespace CartService.Application.Messaging;
 
 public record ProductUpdatedMessage
 {

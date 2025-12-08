@@ -10,6 +10,7 @@ using System.Reflection;
 using CatalogService.API.Swagger;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +34,28 @@ builder.Services.AddVersionedApiExplorer(options =>
 // Swagger
 builder.Services.AddSwaggerGen();
 
-// Configure Swagger generation for each API version
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        // Configure endpoints with message durability and republish on error
+        cfg.ConfigureEndpoints(context);
+
+        // Ensure all published messages are durable (persisted to disk)
+        cfg.Publish<CartService.Application.Messaging.ProductUpdatedMessage>(p =>
+        {
+            p.Durable = true;
+        });
+    });
+});
 
 builder.Services.AddCatalogServices(builder.Configuration);
 

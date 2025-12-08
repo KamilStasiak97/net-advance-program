@@ -11,19 +11,18 @@ RabbitMQ Management UI: http://localhost:15672
 - Username: `guest`
 - Password: `guest`
 
-## Task 2: Services
+## Task 2: Integration between Catalog and Cart Services
 
-### SenderService (Publisher)
-- Port: 5203
-- Swagger: http://localhost:5203/swagger
-- Endpoint: `POST /api/message/product-updated`
-- Publishes messages to RabbitMQ
+### CatalogService (Publisher)
+- Port: 5064
+- Swagger: http://localhost:5064/swagger
+- Publishes messages when product is updated via `PUT /api/v1/Products/{id}`
 
-### ReceiverService (Consumer)
-- Port: 5062
-- Swagger: http://localhost:5062/swagger
+### CartService (Consumer)
+- Port: 5001
+- Swagger: http://localhost:5001/swagger
 - Listens to `product-updated-queue`
-- Processes messages with retry policy and DLQ
+- Updates cart items when product changes
 
 ## Running Services
 
@@ -32,33 +31,34 @@ RabbitMQ Management UI: http://localhost:15672
 docker-compose up -d
 ```
 
-2. Start ReceiverService:
+2. Start CartService:
 ```bash
-cd src/ReceiverService/ReceiverService.API
+cd src/CartService/CartService.API
 dotnet run
 ```
 
-3. Start SenderService:
+3. Start CatalogService:
 ```bash
-cd src/SenderService/SenderService.API
+cd src/CatalogService/CatalogService.API
 dotnet run
 ```
 
 ## Testing
 
-### Send a message:
+### Update a product in CatalogService:
 ```bash
-curl -X POST http://localhost:5203/api/message/product-updated \
+curl -X PUT http://localhost:5064/api/v1/Products/1 \
   -H "Content-Type: application/json" \
   -d '{
-    "productId": 1,
-    "name": "Test Product",
-    "price": 99.99
+    "name": "Updated Product Name",
+    "description": "Updated description",
+    "price": 199.99,
+    "categoryId": 1
   }'
 ```
 
-### Check ReceiverService logs
-The ReceiverService will log when it receives and processes the message.
+### Check CartService logs
+The CartService will log when it receives and processes the product update message.
 
 ## Reliability Features
 

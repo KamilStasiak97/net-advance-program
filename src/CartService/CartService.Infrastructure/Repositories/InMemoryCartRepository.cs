@@ -37,4 +37,15 @@ public class InMemoryCartRepository : ICartRepository
         list.Remove(item);
         return true;
     }
+
+    public void UpdateCartItemsByProductId(int productId, string newName, decimal newPrice)
+    {
+        foreach (var cartItems in _store.Values)
+        {
+            var itemsToUpdate = cartItems.Where(i => i.ProductId == productId).ToList();
+            foreach (var item in itemsToUpdate)
+            {
+            }
+        }
+    }
 }

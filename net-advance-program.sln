@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReceiverService", "ReceiverService", "{7EB81A68-4F1A-C506-484D-E9D205C769F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiverService.API", "src\ReceiverService\ReceiverService.API\ReceiverService.API.csproj", "{B5F07045-91ED-09D7-A098-07DCC9FCB181}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SenderService", "SenderService", "{B1261258-AE86-4D84-676A-E5163770FB10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SenderService.API", "src\SenderService\SenderService.API\SenderService.API.csproj", "{02EA4FA8-E168-C93A-79D4-1FF69178C1C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5F07045-91ED-09D7-A098-07DCC9FCB181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5F07045-91ED-09D7-A098-07DCC9FCB181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5F07045-91ED-09D7-A098-07DCC9FCB181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F07045-91ED-09D7-A098-07DCC9FCB181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02EA4FA8-E168-C93A-79D4-1FF69178C1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02EA4FA8-E168-C93A-79D4-1FF69178C1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02EA4FA8-E168-C93A-79D4-1FF69178C1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02EA4FA8-E168-C93A-79D4-1FF69178C1C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7EB81A68-4F1A-C506-484D-E9D205C769F5} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{B5F07045-91ED-09D7-A098-07DCC9FCB181} = {7EB81A68-4F1A-C506-484D-E9D205C769F5}
+		{B1261258-AE86-4D84-676A-E5163770FB10} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{02EA4FA8-E168-C93A-79D4-1FF69178C1C9} = {B1261258-AE86-4D84-676A-E5163770FB10}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30EB0E37-8FFB-4D6D-A3C1-438CB720F034}
+	EndGlobalSection
+EndGlobal

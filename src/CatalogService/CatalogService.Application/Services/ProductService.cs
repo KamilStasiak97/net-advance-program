@@ -1,16 +1,20 @@
 using CatalogService.Application.DTOs;
+using CartService.Application.Messaging;
 using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
+using MassTransit;
 
 namespace CatalogService.Application.Services;
 
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, IPublishEndpoint publishEndpoint)
     {
         _productRepository = productRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<IEnumerable<ProductDto>> GetProductsAsync(int? categoryId, int pageNumber, int pageSize)
@@ -74,6 +78,14 @@ public class ProductService : IProductService
         existing.Price = productDto.Price;
         existing.CategoryId = productDto.CategoryId;
         await _productRepository.UpdateAsync(existing);
+
+        var message = new ProductUpdatedMessage
+        {
+            ProductId = id,
+            Name = productDto.Name,
+            Price = productDto.Price
+        };
+        await _publishEndpoint.Publish(message);
     }
 
     public async Task DeleteProductAsync(int id)
