@@ -4,6 +4,7 @@ using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using FluentAssertions;
 using Moq;
+using MassTransit;
 
 namespace CatalogService.Tests.Services;
 
@@ -17,7 +18,8 @@ public class ProductServiceUpdateDeleteTests
         repoMock.Setup(r => r.GetByIdAsync(20)).ReturnsAsync(existing);
         repoMock.Setup(r => r.UpdateAsync(existing)).Returns(Task.CompletedTask);
 
-        var service = new ProductService(repoMock.Object);
+        var publishEndpointMock = new Mock<IPublishEndpoint>();
+        var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
         var dto = new UpdateProductDto { Name = "NewP", Description = "new", Price = 2m, CategoryId = 1 };
 
         await service.UpdateProductAsync(20, dto);
@@ -31,7 +33,8 @@ public class ProductServiceUpdateDeleteTests
         var repoMock = new Mock<IProductRepository>();
         repoMock.Setup(r => r.DeleteAsync(7)).Returns(Task.CompletedTask);
 
-        var service = new ProductService(repoMock.Object);
+        var publishEndpointMock = new Mock<IPublishEndpoint>();
+        var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
         await service.DeleteProductAsync(7);
 
         repoMock.Verify(r => r.DeleteAsync(7), Times.Once);

@@ -4,6 +4,7 @@ using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using FluentAssertions;
 using Moq;
+using MassTransit;
 
 namespace CatalogService.Tests.Services;
 
@@ -22,7 +23,8 @@ public class ProductServiceTests
         var repoMock = new Mock<IProductRepository>();
         repoMock.Setup(r => r.GetAllAsync(It.IsAny<int?>(), 1, 1)).ReturnsAsync(new[] { products[0] });
 
-        var service = new ProductService(repoMock.Object);
+        var publishEndpointMock = new Mock<IPublishEndpoint>();
+        var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
 
         // Act
         var result = (await service.GetProductsAsync(null, 1, 1)).ToList();
@@ -41,7 +43,8 @@ public class ProductServiceTests
         var repoMock = new Mock<IProductRepository>();
         repoMock.Setup(r => r.AddAsync(It.IsAny<Product>())).ReturnsAsync((Product p) => { p.Id = 99; return p; });
 
-        var service = new ProductService(repoMock.Object);
+        var publishEndpointMock = new Mock<IPublishEndpoint>();
+        var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
         var dto = new CreateProductDto { Name = "New", Description = "desc", Price = 12.5m, CategoryId = 1 };
 
         // Act

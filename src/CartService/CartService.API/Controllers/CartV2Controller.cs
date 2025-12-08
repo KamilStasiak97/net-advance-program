@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using CartService.Application.Services;
 using CartService.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CartService.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/Cart")]
 [ApiVersion("2.0")]
+[Authorize(Roles = "Manager,Store customer")]
 public class CartV2Controller : ControllerBase
 {
     private readonly ICartService _cartService;
