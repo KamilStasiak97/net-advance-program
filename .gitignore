@@ -52,3 +52,15 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# JetBrains Rider / IntelliJ IDEA
+.idea/
+*.iml
+*.http
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
