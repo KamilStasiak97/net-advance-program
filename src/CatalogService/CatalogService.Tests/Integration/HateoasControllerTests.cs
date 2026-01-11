@@ -1,3 +1,9 @@
+// <copyright file="HateoasControllerTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.Tests.Integration;
+
 using CatalogService.API.Controllers;
 using CatalogService.Application.DTOs;
 using CatalogService.Application.Services;
@@ -6,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
-
-namespace CatalogService.Tests.Integration;
 
 public class HateoasControllerTests
 {
@@ -27,7 +31,7 @@ public class HateoasControllerTests
         controller.Url = urlMock.Object;
 
         // Act
-        var result = await controller.Get(5);
+        var result = await controller.Get(5).ConfigureAwait(false);
 
         // Assert
         result.Should().BeOfType<OkObjectResult>();

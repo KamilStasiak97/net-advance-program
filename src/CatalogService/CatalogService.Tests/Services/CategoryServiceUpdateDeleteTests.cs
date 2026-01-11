@@ -1,11 +1,15 @@
+// <copyright file="CategoryServiceUpdateDeleteTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.Tests.Services;
+
 using CatalogService.Application.DTOs;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using FluentAssertions;
 using Moq;
-
-namespace CatalogService.Tests.Services;
 
 public class CategoryServiceUpdateDeleteTests
 {
@@ -20,7 +24,7 @@ public class CategoryServiceUpdateDeleteTests
         var service = new CategoryService(repoMock.Object);
         var dto = new UpdateCategoryDto { Name = "New", Description = "new" };
 
-        await service.UpdateCategoryAsync(10, dto);
+        await service.UpdateCategoryAsync(10, dto).ConfigureAwait(false);
 
         repoMock.Verify(r => r.UpdateAsync(It.Is<Category>(c => c.Name == "New" && c.Description == "new")), Times.Once);
     }
@@ -32,7 +36,7 @@ public class CategoryServiceUpdateDeleteTests
         repoMock.Setup(r => r.DeleteAsync(5)).Returns(Task.CompletedTask);
 
         var service = new CategoryService(repoMock.Object);
-        await service.DeleteCategoryAsync(5);
+        await service.DeleteCategoryAsync(5).ConfigureAwait(false);
 
         repoMock.Verify(r => r.DeleteAsync(5), Times.Once);
     }

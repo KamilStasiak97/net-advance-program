@@ -1,10 +1,14 @@
-using System.Linq;
-using FluentAssertions;
-using Xunit;
-using CartService.Infrastructure.Repositories;
-using CartService.Domain.Entities;
+// <copyright file="InMemoryCartRepositoryTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CartService.Tests.Repositories;
+
+using System.Linq;
+using CartService.Domain.Entities;
+using CartService.Infrastructure.Repositories;
+using FluentAssertions;
+using Xunit;
 
 public class InMemoryCartRepositoryTests
 {
@@ -22,7 +26,7 @@ public class InMemoryCartRepositoryTests
 
         itemsA.Should().HaveCount(2);
         itemsB.Should().HaveCount(1);
-        itemsA.Select(i => i.ProductId).Should().Contain(new[]{1,2});
+        itemsA.Select(i => i.ProductId).Should().Contain(new[] { 1, 2 });
     }
 
     [Fact]

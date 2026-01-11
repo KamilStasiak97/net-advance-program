@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # Message Broker - RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -17,7 +16,104 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
 
+  # PostgreSQL Database for CatalogService
+  catalog-db:
+    image: postgres:15-alpine
+    container_name: catalog-db
+    environment:
+      POSTGRES_USER: catalog_user
+      POSTGRES_PASSWORD: catalog_password
+      POSTGRES_DB: catalogdb
+    volumes:
+      - catalog_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # Expose on different port to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U catalog_user -d catalogdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # PostgreSQL Database for CartService
+  cart-db:
+    image: postgres:15-alpine
+    container_name: cart-db
+    environment:
+      POSTGRES_USER: cart_user
+      POSTGRES_PASSWORD: cart_password
+      POSTGRES_DB: cartdb
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"  # Expose on different port to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cart_user -d cartdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # CatalogService API
+  catalog-service:
+    build:
+      context: .
+      dockerfile: src/CatalogService/CatalogService.API/Dockerfile
+    container_name: catalog-service
+    ports:
+      - "5064:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__CatalogDb=Host=catalog-db;Port=5432;Database=catalogdb;Username=catalog_user;Password=catalog_password
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/swagger/index.html || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # CartService API
+  cart-service:
+    build:
+      context: .
+      dockerfile: src/CartService/CartService.API/Dockerfile
+    container_name: cart-service
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__CartDb=Host=cart-db;Port=5432;Database=cartdb;Username=cart_user;Password=cart_password
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      cart-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/swagger/index.html || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # SonarQube (optional - for code quality analysis)
   sonarqube:
     image: sonarqube:community
     container_name: sonarqube
@@ -38,6 +134,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
   sonarqube-db:
     image: postgres:15-alpine
@@ -53,11 +151,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
 
 volumes:
   rabbitmq_data:
+  catalog_db_data:
+  cart_db_data:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
   sonarqube_db_data:
 
+networks:
+  app-network:
+    driver: bridge

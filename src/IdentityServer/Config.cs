@@ -1,7 +1,11 @@
-using IdentityServer4;
-using IdentityServer4.Models;
+// <copyright file="Config.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace IdentityServer;
+
+using IdentityServer4;
+using IdentityServer4.Models;
 
 public static class Config
 {
@@ -15,14 +19,14 @@ public static class Config
                 Name = "roles",
                 DisplayName = "User roles",
                 UserClaims = new List<string> { "role" }
-            }
+            },
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
             new ApiScope("catalog-api", "Catalog API"),
-            new ApiScope("cart-api", "Cart API")
+            new ApiScope("cart-api", "Cart API"),
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -31,13 +35,13 @@ public static class Config
             new ApiResource("catalog-api", "Catalog API")
             {
                 Scopes = new List<string> { "catalog-api" },
-                UserClaims = new List<string> { "role" }
+                UserClaims = new List<string> { "role" },
             },
             new ApiResource("cart-api", "Cart API")
             {
                 Scopes = new List<string> { "cart-api" },
                 UserClaims = new List<string> { "role" }
-            }
+            },
         };
 
     public static IEnumerable<Client> Clients =>
@@ -56,8 +60,9 @@ public static class Config
                 AllowOfflineAccess = true,
                 RefreshTokenExpiration = TokenExpiration.Sliding,
                 AbsoluteRefreshTokenLifetime = (int)TimeSpan.FromDays(30).TotalSeconds,
-                SlidingRefreshTokenLifetime = (int)TimeSpan.FromDays(7).TotalSeconds
+                SlidingRefreshTokenLifetime = (int)TimeSpan.FromDays(7).TotalSeconds,
             },
+
             // Cart Service Client
             new Client
             {
@@ -72,6 +77,6 @@ public static class Config
                 RefreshTokenExpiration = TokenExpiration.Sliding,
                 AbsoluteRefreshTokenLifetime = (int)TimeSpan.FromDays(30).TotalSeconds,
                 SlidingRefreshTokenLifetime = (int)TimeSpan.FromDays(7).TotalSeconds
-            }
+            },
         };
 }

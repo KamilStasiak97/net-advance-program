@@ -1,12 +1,16 @@
+// <copyright file="ProductServiceUpdateDeleteTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.Tests.Services;
+
 using CatalogService.Application.DTOs;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using FluentAssertions;
-using Moq;
 using MassTransit;
-
-namespace CatalogService.Tests.Services;
+using Moq;
 
 public class ProductServiceUpdateDeleteTests
 {
@@ -22,7 +26,7 @@ public class ProductServiceUpdateDeleteTests
         var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
         var dto = new UpdateProductDto { Name = "NewP", Description = "new", Price = 2m, CategoryId = 1 };
 
-        await service.UpdateProductAsync(20, dto);
+        await service.UpdateProductAsync(20, dto).ConfigureAwait(false);
 
         repoMock.Verify(r => r.UpdateAsync(It.Is<Product>(p => p.Name == "NewP" && p.Price == 2m)), Times.Once);
     }
@@ -35,7 +39,7 @@ public class ProductServiceUpdateDeleteTests
 
         var publishEndpointMock = new Mock<IPublishEndpoint>();
         var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
-        await service.DeleteProductAsync(7);
+        await service.DeleteProductAsync(7).ConfigureAwait(false);
 
         repoMock.Verify(r => r.DeleteAsync(7), Times.Once);
     }

@@ -1,10 +1,14 @@
-using CartService.Application.Services;
+// <copyright file="CartServiceUnitTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CartService.Tests.Services;
+
 using CartService.Application.DTOs;
+using CartService.Application.Services;
 using CartService.Infrastructure.Repositories;
 using FluentAssertions;
 using Xunit;
-
-namespace CartService.Tests.Services;
 
 public class CartServiceUnitTests
 {

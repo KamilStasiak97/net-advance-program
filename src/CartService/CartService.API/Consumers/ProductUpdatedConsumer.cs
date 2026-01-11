@@ -1,30 +1,34 @@
-using MassTransit;
-using CartService.Application.Messaging;
-using CartService.Application.Services;
+// <copyright file="ProductUpdatedConsumer.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace CartService.API.Consumers;
 
+using CartService.Application.Messaging;
+using CartService.Application.Services;
+using MassTransit;
+
 public class ProductUpdatedConsumer : IConsumer<ProductUpdatedMessage>
 {
-    private readonly ICartService _cartService;
-    private readonly ILogger<ProductUpdatedConsumer> _logger;
+    private readonly ICartService cartService;
+    private readonly ILogger<ProductUpdatedConsumer> logger;
 
     public ProductUpdatedConsumer(ICartService cartService, ILogger<ProductUpdatedConsumer> logger)
     {
-        _cartService = cartService;
-        _logger = logger;
+        this.cartService = cartService;
+        this.logger = logger;
     }
 
     public Task Consume(ConsumeContext<ProductUpdatedMessage> context)
     {
         var message = context.Message;
-        _logger.LogInformation("Received product update: ProductId={ProductId}, Name={Name}, Price={Price}", 
+        this.logger.LogInformation(
+            "Received product update: ProductId={ProductId}, Name={Name}, Price={Price}",
             message.ProductId, message.Name, message.Price);
 
-        _cartService.UpdateCartItemsByProductId(message.ProductId, message.Name, message.Price);
-        
-        _logger.LogInformation("Updated cart items for ProductId={ProductId}", message.ProductId);
+        this.cartService.UpdateCartItemsByProductId(message.ProductId, message.Name, message.Price);
+
+        this.logger.LogInformation("Updated cart items for ProductId={ProductId}", message.ProductId);
         return Task.CompletedTask;
     }
 }
-

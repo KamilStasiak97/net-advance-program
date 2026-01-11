@@ -1,22 +1,26 @@
+// <copyright file="ProductRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.Infrastructure.Repositories;
+
 using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using CatalogService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatalogService.Infrastructure.Repositories;
-
 public class ProductRepository : IProductRepository
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext context;
 
     public ProductRepository(CatalogDbContext context)
     {
-        _context = context;
+        this.context = context;
     }
 
     public async Task<IEnumerable<Product>> GetAllAsync(int? categoryId, int pageNumber, int pageSize)
     {
-        var query = _context.Products
+        var query = this.context.Products
             .Include(p => p.Category)
             .AsQueryable();
 
@@ -28,36 +32,36 @@ public class ProductRepository : IProductRepository
         return await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync().ConfigureAwait(false);
     }
 
     public async Task<Product?> GetByIdAsync(int id)
     {
-        return await _context.Products
+        return await context.Products
             .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
     }
 
     public async Task<Product> AddAsync(Product product)
     {
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
+        this.context.Products.Add(product);
+        await context.SaveChangesAsync().ConfigureAwait(false);
         return product;
     }
 
     public async Task UpdateAsync(Product product)
     {
-        _context.Entry(product).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        this.context.Entry(product).State = EntityState.Modified;
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(int id)
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await context.Products.FindAsync(id).ConfigureAwait(false);
         if (product != null)
         {
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            this.context.Products.Remove(product);
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

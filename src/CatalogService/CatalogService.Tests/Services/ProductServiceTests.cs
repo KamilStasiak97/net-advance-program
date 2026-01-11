@@ -1,12 +1,16 @@
+// <copyright file="ProductServiceTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.Tests.Services;
+
 using CatalogService.Application.DTOs;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Domain.Repositories;
 using FluentAssertions;
-using Moq;
 using MassTransit;
-
-namespace CatalogService.Tests.Services;
+using Moq;
 
 public class ProductServiceTests
 {
@@ -17,7 +21,7 @@ public class ProductServiceTests
         var products = new[]
         {
             new Product { Id = 1, Name = "P1", Description = "d1", Price = 1m, CategoryId = 1, Category = new Category { Id = 1, Name = "C1" } },
-            new Product { Id = 2, Name = "P2", Description = "d2", Price = 2m, CategoryId = 1, Category = new Category { Id = 1, Name = "C1" } }
+            new Product { Id = 2, Name = "P2", Description = "d2", Price = 2m, CategoryId = 1, Category = new Category { Id = 1, Name = "C1" } },
         };
 
         var repoMock = new Mock<IProductRepository>();
@@ -27,7 +31,7 @@ public class ProductServiceTests
         var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
 
         // Act
-        var result = (await service.GetProductsAsync(null, 1, 1)).ToList();
+        var result = (await service.GetProductsAsync(null, 1, 1).ConfigureAwait(false)).ToList();
 
         // Assert
         result.Should().HaveCount(1);
@@ -41,14 +45,15 @@ public class ProductServiceTests
     {
         // Arrange
         var repoMock = new Mock<IProductRepository>();
-        repoMock.Setup(r => r.AddAsync(It.IsAny<Product>())).ReturnsAsync((Product p) => { p.Id = 99; return p; });
+        repoMock.Setup(r => r.AddAsync(It.IsAny<Product>())).ReturnsAsync((Product p) => { p.Id = 99;
+            return p; });
 
         var publishEndpointMock = new Mock<IPublishEndpoint>();
         var service = new ProductService(repoMock.Object, publishEndpointMock.Object);
         var dto = new CreateProductDto { Name = "New", Description = "desc", Price = 12.5m, CategoryId = 1 };
 
         // Act
-        var created = await service.CreateProductAsync(dto);
+        var created = await service.CreateProductAsync(dto).ConfigureAwait(false);
 
         // Assert
         created.Should().NotBeNull();

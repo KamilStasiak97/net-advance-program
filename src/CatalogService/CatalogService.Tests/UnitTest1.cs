@@ -1,3 +1,7 @@
+// <copyright file="UnitTest1.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace CatalogService.Tests;
 
 public class UnitTest1

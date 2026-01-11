@@ -1,62 +1,70 @@
+// <copyright file="CategoriesController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CatalogService.API.Controllers;
+
 using CatalogService.Application.DTOs;
 using CatalogService.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-
-namespace CatalogService.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 public class CategoriesController : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
+    private readonly ICategoryService categoryService;
 
     public CategoriesController(ICategoryService categoryService)
     {
-        _categoryService = categoryService;
+        this.categoryService = categoryService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var categories = await _categoryService.GetAllCategoriesAsync();
-        return Ok(categories);
+        var categories = await categoryService.GetAllCategoriesAsync().ConfigureAwait(false);
+        return this.Ok(categories);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var category = await _categoryService.GetCategoryByIdAsync(id);
-        if (category == null) return NotFound();
+        var category = await categoryService.GetCategoryByIdAsync(id).ConfigureAwait(false);
+        if (category == null)
+        {
+            return this.NotFound();
+        }
+
         var links = new[]
         {
-            new { rel = "self", href = Url.Action(nameof(Get), new { id = category.Id, version = "1.0" }), method = "GET" },
-            new { rel = "update", href = Url.Action(nameof(Put), new { id = category.Id, version = "1.0" }), method = "PUT" },
-            new { rel = "delete", href = Url.Action(nameof(Delete), new { id = category.Id, version = "1.0" }), method = "DELETE" },
-            new { rel = "all", href = Url.Action(nameof(Get), new { version = "1.0" }), method = "GET" }
+            new { rel = "self", href = this.Url.Action(nameof(this.Get), new { id = category.Id, version = "1.0" }), method = "GET" },
+            new { rel = "update", href = this.Url.Action(nameof(this.Put), new { id = category.Id, version = "1.0" }), method = "PUT" },
+            new { rel = "delete", href = this.Url.Action(nameof(this.Delete), new { id = category.Id, version = "1.0" }), method = "DELETE" },
+            new { rel = "all", href = this.Url.Action(nameof(this.Get), new { version = "1.0" }), method = "GET" },
         };
 
-        return Ok(new { data = category, links });
+        return this.Ok(new { data = category, links });
     }
 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] CreateCategoryDto dto)
     {
-        var created = await _categoryService.CreateCategoryAsync(dto);
-        return CreatedAtAction(nameof(Get), new { id = created.Id, version = "1.0" }, created);
+        var created = await categoryService.CreateCategoryAsync(dto).ConfigureAwait(false);
+        return this.CreatedAtAction(nameof(this.Get), new { id = created.Id, version = "1.0" }, created);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] UpdateCategoryDto dto)
     {
-        await _categoryService.UpdateCategoryAsync(id, dto);
-        return NoContent();
+        await categoryService.UpdateCategoryAsync(id, dto).ConfigureAwait(false);
+        return this.NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _categoryService.DeleteCategoryAsync(id);
-        return NoContent();
+        await categoryService.DeleteCategoryAsync(id).ConfigureAwait(false);
+        return this.NoContent();
     }
 }

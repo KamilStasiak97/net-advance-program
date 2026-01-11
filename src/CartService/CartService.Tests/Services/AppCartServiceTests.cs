@@ -1,13 +1,17 @@
+// <copyright file="AppCartServiceTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace CartService.Tests.Services;
+
 using System.Collections.Generic;
+using CartService.Application.DTOs;
+using CartService.Application.Services;
+using CartService.Domain.Entities;
+using CartService.Domain.Repositories;
 using FluentAssertions;
 using Moq;
 using Xunit;
-using CartService.Application.Services;
-using CartService.Application.DTOs;
-using CartService.Domain.Repositories;
-using CartService.Domain.Entities;
-
-namespace CartService.Tests.Services;
 
 public class AppCartServiceTests
 {
