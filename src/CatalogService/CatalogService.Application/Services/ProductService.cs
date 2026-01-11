@@ -27,7 +27,9 @@ public class ProductService : IProductService
             Description = p.Description,
             Price = p.Price,
             CategoryId = p.CategoryId,
-            Category = new CategoryDto { Id = p.Category.Id, Name = p.Category.Name, Description = p.Category.Description }
+            Category = p.Category != null
+                ? new CategoryDto { Id = p.Category.Id, Name = p.Category.Name, Description = p.Category.Description }
+                : new CategoryDto { Id = p.CategoryId, Name = string.Empty, Description = string.Empty }
         });
     }
 
@@ -42,7 +44,9 @@ public class ProductService : IProductService
             Description = p.Description,
             Price = p.Price,
             CategoryId = p.CategoryId,
-            Category = new CategoryDto { Id = p.Category.Id, Name = p.Category.Name, Description = p.Category.Description }
+            Category = p.Category != null
+                ? new CategoryDto { Id = p.Category.Id, Name = p.Category.Name, Description = p.Category.Description }
+                : new CategoryDto { Id = p.CategoryId, Name = string.Empty, Description = string.Empty }
         };
     }
 

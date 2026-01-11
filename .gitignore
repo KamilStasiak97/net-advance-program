@@ -64,3 +64,49 @@ nunit-*.xml
 *.user
 *.userosscache
 *.sln.docstates
+
+# Visual Studio
+.vs/
+*.vsidx
+*.vspscc
+
+# Visual Studio Code
+.vscode/
+
+# SonarQube
+.sonarqube/
+.scannerwork/
+
+# Rider
+.idea/
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+
+# Test results
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+
+# Package files
+*.nupkg
+*.snupkg
+packages/
+
+# Node modules (if any)
+node_modules/
+
+# Docker volumes
+docker-compose.override.yml

@@ -45,6 +45,10 @@ public class InMemoryCartRepository : ICartRepository
             var itemsToUpdate = cartItems.Where(i => i.ProductId == productId).ToList();
             foreach (var item in itemsToUpdate)
             {
+                // Update cart item properties when product is updated
+                // Note: CartItem doesn't store name/price, but this method signature
+                // is required by the interface. In a real scenario, you might want
+                // to store product name/price in CartItem or fetch from product service.
             }
         }
     }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using IdentityServer4.Services;
 using IdentityModel.Client;
 
 namespace IdentityServer.Controllers;
@@ -8,16 +7,13 @@ namespace IdentityServer.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IIdentityServerInteractionService _interaction;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<AuthController> _logger;
 
     public AuthController(
-        IIdentityServerInteractionService interaction,
         IHttpClientFactory httpClientFactory,
         ILogger<AuthController> logger)
     {
-        _interaction = interaction;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
     }
